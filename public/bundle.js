@@ -27486,7 +27486,6 @@ var upDatePage = function upDatePage() {
         method: 'get'
     }).then(function (response) {
         return response.json().then(function (obj) {
-            console.log(obj.ember.subscriberCount);
             var gitHubData = obj;
             //Create our Subscriber Bar Chart
             var ctx = document.getElementById("subscriberBar");

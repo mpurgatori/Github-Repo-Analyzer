@@ -1,13 +1,13 @@
 let express = require('express');
 let morgan = require('morgan');
 const app = express();
-const dataFetch = require('./git_hub_route').dataFetch;
+const dataFetch = require('./github_route').dataFetch;
 
 const path = require('path');
 const rootPath = path.join(__dirname);
 
 const bodyParser = require('body-parser');
-const gitHubRouter = require('./git_hub_route').router;
+const gitHubRouter = require('./github_route').router;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
