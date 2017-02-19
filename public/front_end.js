@@ -87,7 +87,7 @@ type: 'bar',
 data: {
     labels: ["React", "Angular", "Ember", "Vue"],
     datasets: [{
-        label: 'Most recent week commits',
+        label: '# of most recent week commits',
         data: [gitHubData.react.lastWeekCommits, gitHubData.angular.lastWeekCommits, gitHubData.ember.lastWeekCommits, gitHubData.vue.lastWeekCommits],
         backgroundColor: [
             'rgba(54, 162, 235, 0.3)',
