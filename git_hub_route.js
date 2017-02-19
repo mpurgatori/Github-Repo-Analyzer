@@ -94,7 +94,6 @@ const vueFetchCommits = {
 
 //Run fetch on interval to keep data updated
 const dataFetch = function(){
-
   async.parallel({
       reactData1: function(parallelCb) {
           Request(reactFetch, function (err, res, body) {
@@ -154,6 +153,7 @@ const dataFetch = function(){
       gitHubData.vue.lastWeekCommits = results.vueData2.body.all[51];
   });
 }
+setInterval(dataFetch,60000)
 
 //send gitHubData on request
 router.get('/', (req, res, next) => {

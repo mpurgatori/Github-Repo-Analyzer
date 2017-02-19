@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Front End Framework Analyzer</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/css/heroic-features.css" rel="stylesheet">
+    <link href="/css/font-awesome.min.css" rel="stylesheet">
+
+    <!--JavaScript-->
+    <script src="bundle.js"></script>
+    <script src="sorttable.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <!-- Page Content -->
+    <div class="container-fluid">
+
+        <!-- Jumbotron Header -->
+        <header style="margin-left:3em; margin-right:3em"class="jumbotron hero-spacer">
+            <i style="font-size:5em" class="fa fa-fw fa-github"></i>
+            <h1>JavaScript Framework Analyzer</h1>
+            <p>A comparison between the React, Angular, Ember and Vue front end frameworks via Github statistics.</p>
+        </header>
+
+        <hr>
+
+        <!-- Title -->
+        <div style="margin-left:3em; margin-right:3em" class="row">
+            <div class="col-lg-12">
+                <h3>Comparing total forks, total subscribers and commits for the most recent week.</h3>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <!-- Page Features -->
+        <div style="margin-left:3em; margin-right:3em" class="row text-center">
+
+          <div class="col-md-4 col-sm-12 hero-feature">
+              <div class="thumbnail">
+                  <canvas id="subscriberBar"></canvas>
+                  <div class="caption">
+                      <h3>Total Subscribers</h3>
+                      <p>Number of subscribers over the life of the repository.</p>
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-md-4 col-sm-12 hero-feature">
+              <div class="thumbnail">
+                  <canvas id="forkBar"></canvas>
+                  <div class="caption">
+                      <h3>Total Forks</h3>
+                      <p>Number of forks over the life of the repository.</p>
+                  </div>
+              </div>
+          </div>
+
+          <div class="col-md-4 col-sm-12 hero-feature">
+              <div class="thumbnail">
+                  <canvas id="commitBar"></canvas>
+                  <div class="caption">
+                      <h3>Recent Commits</h3>
+                      <p>Total number of commits over the most recent week available.</p>
+                  </div>
+              </div>
+          </div>
+        </div>
+          <hr>
+        <div style="margin-left:3em; margin-right:3em" class="row">
+            <div class="col-lg-12">
+              <h3>Total forks, total subscribers and commits for the most recent week. Click headers to sort.</h3>
+            </div>
+        </div>
+        <div class="col-md-12 col-sm-12 hero-feature">
+            <table class="table-striped table-bordered table col-md-12 col-sm-12 sortable" style="align:center;">
+              <thead class="thead-inverse">
+              <tr>
+                <th>Framework</th>
+                <th>Subscribers</th>
+                <th>Forks</th>
+                <th>Recent Commits</th>
+              </tr>
+            </thead>
+              <tr>
+                <td>React</td>
+                <td id="reactSubscribe"></td>
+                <td id="reactFork"></td>
+                <td id="reactCommit"></td>
+              </tr>
+              <tr>
+                <td>Angular</td>
+                <td id="angularSubscribe"></td>
+                <td id="angularFork"></td>
+                <td id="angularCommit"></td>
+              </tr>
+              <tr>
+                <td>Ember</td>
+                <td id="emberSubscribe"></td>
+                <td id="emberFork"></td>
+                <td id="emberCommit"></td>
+              </tr>
+              <tr>
+                <td>Vue</td>
+                <td id="vueSubscribe"></td>
+                <td id="vueFork"></td>
+                <td id="vueCommit"></td>
+              </tr>
+            </table>
+          </div>
+
+    </div>
+        <!-- /.row -->
+
+        <hr>
+
+        <!-- Footer -->
+        <footer>
+            <div class="row" style="margin-left:3em; margin-right:3em">
+                <div class="col-lg-12">
+                    <p>By Mike Purgatori</p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+    <!-- /.container -->
+
+
+</body>
+
+</html>

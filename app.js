@@ -1,9 +1,9 @@
 let express = require('express');
 let morgan = require('morgan');
-const dataFetch = require('./git_hub_route').dataFetch;
-const path = require('path');
-
 const app = express();
+const dataFetch = require('./git_hub_route').dataFetch;
+
+const path = require('path');
 const rootPath = path.join(__dirname);
 
 const bodyParser = require('body-parser');
@@ -14,13 +14,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(morgan('default'));
 
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api', gitHubRouter);
 
-
 app.get('*', function (req, res, next) {
-  //console.log('THIS IS REQ SESSION',req.session);
-  res.sendFile(rootPath+'/client/index.html')
+  res.sendFile(rootPath+'/public/index.html')
 });
 
 app.use(function (err, req, res, next) {
