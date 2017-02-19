@@ -10,10 +10,12 @@
   "author": "mike purgatori",
   "license": "ISC",
   "dependencies": {
+    "async": "^2.1.4",
     "body-parser": "^1.16.1",
     "express": "^4.14.1",
     "morgan": "^1.8.1",
     "path": "^0.12.7",
-    "request": "^2.79.0"
+    "request": "^2.79.0",
+    "request-promise": "^4.1.1"
   }
 }

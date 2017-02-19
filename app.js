@@ -1,13 +1,13 @@
 let express = require('express');
 let morgan = require('morgan');
+const dataFetch = require('./git_hub_route').dataFetch;
 const path = require('path');
 
 const app = express();
 const rootPath = path.join(__dirname);
 
-let gitHubRouter = require('./git_hub_route');
-
-let bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
+const gitHubRouter = require('./git_hub_route').router;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -17,7 +17,6 @@ app.use(morgan('default'));
 
 app.use('/api', gitHubRouter);
 
-app.use(express.static('client/public'))
 
 app.get('*', function (req, res, next) {
   //console.log('THIS IS REQ SESSION',req.session);
@@ -30,6 +29,7 @@ app.use(function (err, req, res, next) {
 });
 
 app.listen(3000, function(){
+  dataFetch();
   console.log('Here on port 3000');
 })
 
