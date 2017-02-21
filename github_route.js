@@ -6,18 +6,20 @@ const async = require('async');
 //client credentials
 const clientId = require('./client_creds').clientId
 const clientSecret = require('./client_creds').clientSecret
+const urlCreds = `client_id=${clientId}&client_secret=${clientSecret}`
 
 //API Routes for subscriber count and fork total
-const reactCount = `https://api.github.com/repos/facebook/react?client_id=${clientId}&client_secret=${clientSecret}`
-const angularCount = `https://api.github.com/repos/angular/angular.js?client_id=${clientId}&client_secret=${clientSecret}`
-const emberCount = `https://api.github.com/repos/emberjs/ember.js?client_id=${clientId}&client_secret=${clientSecret}`
-const vueCount = `https://api.github.com/repos/vuejs/vue?client_id=${clientId}&client_secret=${clientSecret}`
+const reactCount = `https://api.github.com/repos/facebook/react?${urlCreds}`
+const angularCount = `https://api.github.com/repos/angular/angular.js?${urlCreds}`
+const emberCount = `https://api.github.com/repos/emberjs/ember.js?${urlCreds}`
+const vueCount = `https://api.github.com/repos/vuejs/vue?${urlCreds}`
 
 //API Routes for weekly commits
-const reactCommits = `https://api.github.com/repos/facebook/react/stats/participation?client_id=${clientId}&client_secret=${clientSecret}`
-const angularCommits = `https://api.github.com/repos/angular/angular.js/stats/participation?client_id=${clientId}&client_secret=${clientSecret}`
-const emberCommits = `https://api.github.com/repos/emberjs/ember.js/stats/participation?client_id=${clientId}&client_secret=${clientSecret}`
-const vueCommits = `https://api.github.com/repos/vuejs/vue/stats/participation?client_id=${clientId}&client_secret=${clientSecret}`
+const reactCommits = `https://api.github.com/repos/facebook/react/stats/participation?${urlCreds}`
+const angularCommits = `https://api.github.com/repos/angular/angular.js/stats/participation?${urlCreds}`
+const emberCommits = `https://api.github.com/repos/emberjs/ember.js/stats/participation?${urlCreds}`
+const vueCommits = `https://api.github.com/repos/vuejs/vue/stats/participation?${urlCreds}`
+
 
 //Data to fill out and send to client
 let gitHubData = {
@@ -43,95 +45,55 @@ let gitHubData = {
   }
 }
 
-//Requests for forks and subscribers
-const reactFetch = {
-    url: reactCount,
-    headers:{'User-Agent': 'launchpad'},
-    json:true
-};
+//Function that creates requests from url
+const requestMaker = function(reqUrl){
+  return requestObj = {
+    url: reqUrl,
+    headers: {'User-Agent': 'launchpad'},
+    json: true
+  }
+}
 
-const angularFetch = {
-    url: angularCount,
-    headers:{'User-Agent': 'launchpad'},
-    json:true
-};
-
-const emberFetch = {
-    url: emberCount,
-    headers:{'User-Agent': 'launchpad'},
-    json:true
-};
-
-const vueFetch = {
-    url: vueCount,
-    headers:{'User-Agent': 'launchpad'},
-    json:true
-};
-
-const reactFetchCommits = {
-    url: reactCommits,
-    headers:{'User-Agent': 'launchpad'},
-    json:true
-};
-
-const angularFetchCommits = {
-    url: angularCommits,
-    headers:{'User-Agent': 'launchpad'},
-    json:true
-};
-
-const emberFetchCommits = {
-    url: emberCommits,
-    headers:{'User-Agent': 'launchpad'},
-    json:true
-};
-
-const vueFetchCommits = {
-    url: vueCommits,
-    headers:{'User-Agent': 'launchpad'},
-    json:true
-};
-
-//Run fetch on interval to keep data updated
+//async.parrallel to make many consecutive api requests - Run fetch on interval to keep data updated
 const dataFetch = function(){
   async.parallel({
       reactData1: function(parallelCb) {
-          Request(reactFetch, function (err, res, body) {
+          Request(requestMaker(reactCount), function (err, res, body) {
               parallelCb(null, {err: err, res: res, body: body});
           });
       },
       angularData1: function(parallelCb) {
-          Request(angularFetch, function (err, res, body) {
+          Request(requestMaker(angularCount), function (err, res, body) {
               parallelCb(null, {err: err, res: res, body: body});
           });
       },
       emberData1: function(parallelCb) {
-          Request(emberFetch, function (err, res, body) {
+          Request(requestMaker(emberCount), function (err, res, body) {
               parallelCb(null, {err: err, res: res, body: body});
           });
       },
       vueData1: function(parallelCb) {
-          Request(vueFetch, function (err, res, body) {
+          Request(requestMaker(vueCount), function (err, res, body) {
               parallelCb(null, {err: err, res: res, body: body});
           });
       },
       reactData2: function(parallelCb) {
-          Request(reactFetchCommits, function (err, res, body) {
+          Request(requestMaker(reactCommits), function (err, res, body) {
               parallelCb(null, {err: err, res: res, body: body});
           });
       },
       angularData2: function(parallelCb) {
-          Request(angularFetchCommits, function (err, res, body) {
+          Request(requestMaker(angularCommits), function (err, res, body) {
               parallelCb(null, {err: err, res: res, body: body});
           });
       },
       emberData2: function(parallelCb) {
-          Request(emberFetchCommits, function (err, res, body) {
+          Request(requestMaker(emberCommits), function (err, res, body) {
               parallelCb(null, {err: err, res: res, body: body});
           });
       },
       vueData2: function(parallelCb) {
-          Request(vueFetchCommits, function (err, res, body) {
+          Request(requestMaker(vueCommits), function (err, res, body) {
               parallelCb(null, {err: err, res: res, body: body});
           });
       }
