@@ -25770,6 +25770,7 @@ var Color = function (obj) {
 		return new Color(obj);
 	}
 
+	this.valid = false;
 	this.values = {
 		rgb: [0, 0, 0],
 		hsl: [0, 0, 0],
@@ -25789,8 +25790,6 @@ var Color = function (obj) {
 			this.setValues('hsl', vals);
 		} else if (vals = string.getHwb(obj)) {
 			this.setValues('hwb', vals);
-		} else {
-			throw new Error('Unable to parse color from string "' + obj + '"');
 		}
 	} else if (typeof obj === 'object') {
 		vals = obj;
@@ -25804,13 +25803,14 @@ var Color = function (obj) {
 			this.setValues('hwb', vals);
 		} else if (vals.c !== undefined || vals.cyan !== undefined) {
 			this.setValues('cmyk', vals);
-		} else {
-			throw new Error('Unable to parse color from object ' + JSON.stringify(obj));
 		}
 	}
 };
 
 Color.prototype = {
+	isValid: function () {
+		return this.valid;
+	},
 	rgb: function () {
 		return this.setSpace('rgb', arguments);
 	},
@@ -26153,6 +26153,8 @@ Color.prototype.setValues = function (space, vals) {
 	var maxes = this.maxes;
 	var alpha = 1;
 	var i;
+
+	this.valid = true;
 
 	if (space === 'alpha') {
 		alpha = vals;
@@ -27479,6 +27481,34 @@ var _chart2 = _interopRequireDefault(_chart);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//Function to create Bar charts
+var chartMaker = function chartMaker(chartArr) {
+    var ctx = document.getElementById(chartArr[0]);
+    var subscriberBar = new _chart2.default(ctx, {
+        type: 'bar',
+        data: {
+            labels: ["React", "Angular", "Ember", "Vue"],
+            datasets: [{
+                label: 'Total # of subscribers',
+                data: [chartArr[1], chartArr[2], chartArr[3], chartArr[4]],
+                backgroundColor: ['rgba(54, 162, 235, 0.3)', 'rgba(255, 99, 132, 0.3)', 'rgba(255, 69, 0, 0.3)', 'rgba(75, 192, 192, 0.3)'],
+                borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)', 'rgba(255, 69, 0, 1)', 'rgba(75, 192, 192, 1)'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            animation: false,
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+};
+
 //The upDatePage function fetches the data from server and creates graphs.
 var upDatePage = function upDatePage() {
     //Make our Server request for GitHub Data
@@ -27487,94 +27517,29 @@ var upDatePage = function upDatePage() {
     }).then(function (response) {
         return response.json().then(function (obj) {
             var gitHubData = obj;
-            //Create our Subscriber Bar Chart
-            var ctx = document.getElementById("subscriberBar");
-            var subscriberBar = new _chart2.default(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ["React", "Angular", "Ember", "Vue"],
-                    datasets: [{
-                        label: 'Total # of subscribers',
-                        data: [gitHubData.react.subscriberCount, gitHubData.angular.subscriberCount, gitHubData.ember.subscriberCount, gitHubData.vue.subscriberCount],
-                        backgroundColor: ['rgba(54, 162, 235, 0.3)', 'rgba(255, 99, 132, 0.3)', 'rgba(255, 69, 0, 0.3)', 'rgba(75, 192, 192, 0.3)'],
-                        borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)', 'rgba(255, 69, 0, 1)', 'rgba(75, 192, 192, 1)'],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    animation: false,
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    }
-                }
-            });
-            //Create our Forks Bar Chart
-            var ctx2 = document.getElementById("forkBar");
-            var forkBar = new _chart2.default(ctx2, {
-                type: 'bar',
-                data: {
-                    labels: ["React", "Angular", "Ember", "Vue"],
-                    datasets: [{
-                        label: 'Total # of forks',
-                        data: [gitHubData.react.forks, gitHubData.angular.forks, gitHubData.ember.forks, gitHubData.vue.forks],
-                        backgroundColor: ['rgba(54, 162, 235, 0.3)', 'rgba(255, 99, 132, 0.3)', 'rgba(255, 69, 0, 0.3)', 'rgba(75, 192, 192, 0.3)'],
-                        borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)', 'rgba(255, 69, 0, 1)', 'rgba(75, 192, 192, 1)'],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    animation: false,
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    }
-                }
-            });
-            //Create Our Weekly Commit Bar Chart
-            var ctx3 = document.getElementById("commitBar");
-            var commitBar = new _chart2.default(ctx3, {
-                type: 'bar',
-                data: {
-                    labels: ["React", "Angular", "Ember", "Vue"],
-                    datasets: [{
-                        label: 'Most recent week commits',
-                        data: [gitHubData.react.lastWeekCommits, gitHubData.angular.lastWeekCommits, gitHubData.ember.lastWeekCommits, gitHubData.vue.lastWeekCommits],
-                        backgroundColor: ['rgba(54, 162, 235, 0.3)', 'rgba(255, 99, 132, 0.3)', 'rgba(255, 69, 0, 0.3)', 'rgba(75, 192, 192, 0.3)'],
-                        borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)', 'rgba(255, 69, 0, 1)', 'rgba(75, 192, 192, 1)'],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    animation: false,
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    }
-                }
-            });
-            //Fill out table date - React
+            //Create Arrays for chart data
+            var subscriberChart = ['subscriberBar', gitHubData.react.subscriberCount, gitHubData.angular.subscriberCount, gitHubData.ember.subscriberCount, gitHubData.vue.subscriberCount];
+            var forkChart = ['forkBar', gitHubData.react.forks, gitHubData.angular.forks, gitHubData.ember.forks, gitHubData.vue.forks];
+            var commitsChart = ['commitBar', gitHubData.react.lastWeekCommits, gitHubData.angular.lastWeekCommits, gitHubData.ember.lastWeekCommits, gitHubData.vue.lastWeekCommits];
+
+            //Run charMaker function on chartData for each chart
+            chartMaker(subscriberChart);
+            chartMaker(forkChart);
+            chartMaker(commitsChart);
+
+            //Fill out table data - React
             document.getElementById('reactSubscribe').innerHTML = gitHubData.react.subscriberCount;
             document.getElementById('reactFork').innerHTML = gitHubData.react.forks;
             document.getElementById('reactCommit').innerHTML = gitHubData.react.lastWeekCommits;
-            //Fill out table date - Angular
+            //Fill out table data - Angular
             document.getElementById('angularSubscribe').innerHTML = gitHubData.angular.subscriberCount;
             document.getElementById('angularFork').innerHTML = gitHubData.angular.forks;
             document.getElementById('angularCommit').innerHTML = gitHubData.angular.lastWeekCommits;
-            //Fill out table date - Ember
+            //Fill out table data - Ember
             document.getElementById('emberSubscribe').innerHTML = gitHubData.ember.subscriberCount;
             document.getElementById('emberFork').innerHTML = gitHubData.ember.forks;
             document.getElementById('emberCommit').innerHTML = gitHubData.ember.lastWeekCommits;
-            //Fill out table date - Vue
+            //Fill out table data - Vue
             document.getElementById('vueSubscribe').innerHTML = gitHubData.vue.subscriberCount;
             document.getElementById('vueFork').innerHTML = gitHubData.vue.forks;
             document.getElementById('vueCommit').innerHTML = gitHubData.vue.lastWeekCommits;
