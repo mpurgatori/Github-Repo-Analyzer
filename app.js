@@ -27,9 +27,9 @@ app.use(function (err, req, res, next) {
     res.status(err.status || 500).send(err.message || 'Internal server error');
 });
 
-app.listen(3000, function(){
+app.listen(process.env.port || 3000, function(){
   dataFetch();
-  console.log('Here on port 3000');
+  console.log('Listening!');
 })
 
 module.exports = app;
