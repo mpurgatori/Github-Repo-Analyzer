@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
+
 const Request = require('request');
-const async = require('async');
+const Promise = require('bluebird');
+const axios = require('axios');
 
 //client credentials
 const clientId = require('./client_creds').clientId
@@ -19,6 +21,8 @@ const reactCommits = `https://api.github.com/repos/facebook/react/stats/particip
 const angularCommits = `https://api.github.com/repos/angular/angular.js/stats/participation?${urlCreds}`
 const emberCommits = `https://api.github.com/repos/emberjs/ember.js/stats/participation?${urlCreds}`
 const vueCommits = `https://api.github.com/repos/vuejs/vue/stats/participation?${urlCreds}`
+
+const Urls = [ reactCount, angularCount, emberCount, vueCount, reactCommits, angularCommits, emberCommits, vueCommits]
 
 
 //Data to fill out and send to client
@@ -48,76 +52,48 @@ let gitHubData = {
 //Function that creates requests from url
 const requestMaker = function(reqUrl){
   return requestObj = {
+    method: 'get',
     url: reqUrl,
     headers: {'User-Agent': 'launchpad'},
-    json: true
+    json:true
   }
 }
 
-//async.parrallel to make many consecutive api requests - Run fetch on interval to keep data updated
-const dataFetch = function(){
-  async.parallel({
-      reactData1: function(parallelCb) {
-          Request(requestMaker(reactCount), function (err, res, body) {
-              parallelCb(null, {err: err, res: res, body: body});
-          });
-      },
-      angularData1: function(parallelCb) {
-          Request(requestMaker(angularCount), function (err, res, body) {
-              parallelCb(null, {err: err, res: res, body: body});
-          });
-      },
-      emberData1: function(parallelCb) {
-          Request(requestMaker(emberCount), function (err, res, body) {
-              parallelCb(null, {err: err, res: res, body: body});
-          });
-      },
-      vueData1: function(parallelCb) {
-          Request(requestMaker(vueCount), function (err, res, body) {
-              parallelCb(null, {err: err, res: res, body: body});
-          });
-      },
-      reactData2: function(parallelCb) {
-          Request(requestMaker(reactCommits), function (err, res, body) {
-              parallelCb(null, {err: err, res: res, body: body});
-          });
-      },
-      angularData2: function(parallelCb) {
-          Request(requestMaker(angularCommits), function (err, res, body) {
-              parallelCb(null, {err: err, res: res, body: body});
-          });
-      },
-      emberData2: function(parallelCb) {
-          Request(requestMaker(emberCommits), function (err, res, body) {
-              parallelCb(null, {err: err, res: res, body: body});
-          });
-      },
-      vueData2: function(parallelCb) {
-          Request(requestMaker(vueCommits), function (err, res, body) {
-              parallelCb(null, {err: err, res: res, body: body});
-          });
-      }
-  }, function(err, results) {
-      //Set subscriber count on gitHubData object
-      gitHubData.react.subscriberCount = results.reactData1.body.subscribers_count;
-      gitHubData.angular.subscriberCount = results.angularData1.body.subscribers_count;
-      gitHubData.ember.subscriberCount = results.emberData1.body.subscribers_count;
-      gitHubData.vue.subscriberCount = results.vueData1.body.subscribers_count;
-      //Set fork count on gitHubData object
-      gitHubData.react.forks = results.reactData1.body.forks;
-      gitHubData.angular.forks = results.angularData1.body.forks;
-      gitHubData.ember.forks = results.emberData1.body.forks;
-      gitHubData.vue.forks = results.vueData1.body.forks;
-      //Set commit count on gitHubData object
-      gitHubData.react.lastWeekCommits = results.reactData2.body.all[51];
-      gitHubData.angular.lastWeekCommits = results.angularData2.body.all[51];
-      gitHubData.ember.lastWeekCommits = results.emberData2.body.all[51];
-      gitHubData.vue.lastWeekCommits = results.vueData2.body.all[51];
-  });
+//Function that creates array of requests
+const URLArray = Urls.map(url => {
+  return requestMaker(url);
+})
+
+//Run promise.map to make multiple consecutive requests
+const dataFetch = () => {
+ Promise.map(URLArray, (requestObj) => {
+  return axios(requestObj)
+})
+  .then(recievedData => {
+    //Assign received data to object
+    gitHubData.react.subscriberCount = recievedData[0].data.subscribers_count
+    gitHubData.angular.subscriberCount = recievedData[1].data.subscribers_count
+    gitHubData.ember.subscriberCount = recievedData[2].data.subscribers_count
+    gitHubData.vue.subscriberCount = recievedData[3].data.subscribers_count
+
+    gitHubData.react.forks = recievedData[0].data.forks
+    gitHubData.angular.forks = recievedData[1].data.forks
+    gitHubData.ember.forks = recievedData[2].data.forks
+    gitHubData.vue.forks = recievedData[3].data.forks
+
+    gitHubData.react.lastWeekCommits = recievedData[4].data.all[51]
+    gitHubData.angular.lastWeekCommits = recievedData[5].data.all[51]
+    gitHubData.ember.lastWeekCommits = recievedData[6].data.all[51]
+    gitHubData.vue.lastWeekCommits = recievedData[7].data.all[51]
+  })
+  .catch((err) => {
+    console.log('err', err)
+  })
 }
+//Retrieve data once every minute
 setInterval(dataFetch,60000)
 
-//send gitHubData on request
+//send gitHubData on request from client
 router.get('/', (req, res, next) => {
   res.send(gitHubData)
 })

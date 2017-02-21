@@ -9,8 +9,8 @@ const chartMaker = function(chartArr){
   data: {
       labels: ["React", "Angular", "Ember", "Vue"],
       datasets: [{
-          label: 'Total # of subscribers',
-          data: [chartArr[1], chartArr[2], chartArr[3], chartArr[4]],
+          label: chartArr[1],
+          data: [chartArr[2], chartArr[3], chartArr[4], chartArr[5]],
           backgroundColor: [
               'rgba(54, 162, 235, 0.3)',
               'rgba(255, 99, 132, 0.3)',
@@ -48,10 +48,10 @@ const upDatePage = function(){
 	return response.json()
   .then(function(obj){
     let gitHubData = obj;
-    //Create Arrays for chart data
-    const subscriberChart = ['subscriberBar', gitHubData.react.subscriberCount, gitHubData.angular.subscriberCount, gitHubData.ember.subscriberCount, gitHubData.vue.subscriberCount]
-    const forkChart = ['forkBar', gitHubData.react.forks, gitHubData.angular.forks, gitHubData.ember.forks, gitHubData.vue.forks]
-    const commitsChart = ['commitBar', gitHubData.react.lastWeekCommits, gitHubData.angular.lastWeekCommits, gitHubData.ember.lastWeekCommits, gitHubData.vue.lastWeekCommits]
+    //Arrays for chart data
+    const subscriberChart = ['subscriberBar', 'Total # of subscribers', gitHubData.react.subscriberCount, gitHubData.angular.subscriberCount, gitHubData.ember.subscriberCount, gitHubData.vue.subscriberCount,]
+    const forkChart = ['forkBar', 'Total # of forks', gitHubData.react.forks, gitHubData.angular.forks, gitHubData.ember.forks, gitHubData.vue.forks]
+    const commitsChart = ['commitBar', 'Recent week commits',gitHubData.react.lastWeekCommits, gitHubData.angular.lastWeekCommits, gitHubData.ember.lastWeekCommits, gitHubData.vue.lastWeekCommits]
 
     //Run charMaker function on chartData for each data point
     chartMaker(subscriberChart);

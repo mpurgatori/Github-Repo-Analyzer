@@ -27489,8 +27489,8 @@ var chartMaker = function chartMaker(chartArr) {
         data: {
             labels: ["React", "Angular", "Ember", "Vue"],
             datasets: [{
-                label: 'Total # of subscribers',
-                data: [chartArr[1], chartArr[2], chartArr[3], chartArr[4]],
+                label: chartArr[1],
+                data: [chartArr[2], chartArr[3], chartArr[4], chartArr[5]],
                 backgroundColor: ['rgba(54, 162, 235, 0.3)', 'rgba(255, 99, 132, 0.3)', 'rgba(255, 69, 0, 0.3)', 'rgba(75, 192, 192, 0.3)'],
                 borderColor: ['rgba(54, 162, 235, 1)', 'rgba(255, 99, 132, 1)', 'rgba(255, 69, 0, 1)', 'rgba(75, 192, 192, 1)'],
                 borderWidth: 1
@@ -27517,12 +27517,12 @@ var upDatePage = function upDatePage() {
     }).then(function (response) {
         return response.json().then(function (obj) {
             var gitHubData = obj;
-            //Create Arrays for chart data
-            var subscriberChart = ['subscriberBar', gitHubData.react.subscriberCount, gitHubData.angular.subscriberCount, gitHubData.ember.subscriberCount, gitHubData.vue.subscriberCount];
-            var forkChart = ['forkBar', gitHubData.react.forks, gitHubData.angular.forks, gitHubData.ember.forks, gitHubData.vue.forks];
-            var commitsChart = ['commitBar', gitHubData.react.lastWeekCommits, gitHubData.angular.lastWeekCommits, gitHubData.ember.lastWeekCommits, gitHubData.vue.lastWeekCommits];
+            //Arrays for chart data
+            var subscriberChart = ['subscriberBar', 'Total # of subscribers', gitHubData.react.subscriberCount, gitHubData.angular.subscriberCount, gitHubData.ember.subscriberCount, gitHubData.vue.subscriberCount];
+            var forkChart = ['forkBar', 'Total # of forks', gitHubData.react.forks, gitHubData.angular.forks, gitHubData.ember.forks, gitHubData.vue.forks];
+            var commitsChart = ['commitBar', 'Recent week commits', gitHubData.react.lastWeekCommits, gitHubData.angular.lastWeekCommits, gitHubData.ember.lastWeekCommits, gitHubData.vue.lastWeekCommits];
 
-            //Run charMaker function on chartData for each chart
+            //Run charMaker function on chartData for each data point
             chartMaker(subscriberChart);
             chartMaker(forkChart);
             chartMaker(commitsChart);
