@@ -1,5 +1,4 @@
-# LaunchPad-Lab-Challenge
-Github Repository Analyzer
+#Github Repository Analyzer
 
 Description - An application that compares subscriber, fork and commit data between the React, Angular, Ember and Vue frameworks in real-time.
 
